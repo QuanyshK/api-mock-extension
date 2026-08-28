@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>qk-api-mock</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Projects Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2 class="sidebar-title">Projects</h2>
+        <div class="sidebar-header-actions">
+          <button id="addProjectBtn" class="btn btn-icon btn-add" title="New Project">+</button>
+          <button id="closeSidebarHeaderBtn" class="btn btn-icon btn-close-sidebar" title="Close">✕</button>
+        </div>
+      </div>
+      <div class="project-list" id="projectList">
+        <!-- Projects will be inserted here -->
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+      <header class="header">
+        <div class="header-left">
+          <button id="openSidebarBtn" class="btn btn-icon btn-menu" title="Projects">☰</button>
+          <h1 class="title">
+            <span class="title-icon">🎭</span>
+            <span id="currentProjectName">qk-api-mock</span>
+          </h1>
+        </div>
+        <div class="header-actions">
+          <button id="resetCountersBtn" class="btn btn-secondary btn-small" title="Reset Counters">
+            ↺ Reset
+          </button>
+          <button id="addMockBtn" class="btn btn-primary btn-small">
+            + Add Mock
+          </button>
+        </div>
+      </header>
+
+      <main class="main">
+        <div id="emptyState" class="empty-state">
+          <div class="empty-state-icon">📭</div>
+          <p class="empty-state-text">No mock rules</p>
+          <p class="empty-state-subtext">Click "+ Add Mock" to create your first rule</p>
+        </div>
+
+        <div id="mockList" class="mock-list">
+          <!-- Mock cards will be inserted here -->
+        </div>
+      </main>
+
+      <footer class="footer">
+        <span class="footer-text">qk-api-mock v0.0.1</span>
+        <span id="activeRulesCount" class="badge badge-info">0 active</span>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Template for project item -->
+  <template id="projectItemTemplate">
+    <div class="project-item" data-project-id="">
+      <label class="toggle toggle-small">
+        <input type="checkbox" class="project-enabled">
+        <span class="toggle-slider"></span>
+      </label>
+      <span class="project-name"></span>
+      <div class="project-actions">
+        <button class="btn btn-icon btn-project-edit" title="Rename">✎</button>
+        <button class="btn btn-icon btn-project-delete" title="Delete">×</button>
+      </div>
+    </div>
+  </template>
+
+  <!-- Template for mock card (compact view) -->
+  <template id="mockCardTemplate">
+    <div class="mock-card" data-rule-id="">
+      <!-- Compact Header (always visible) -->
+      <div class="mock-card-header">
+        <label class="toggle">
+          <input type="checkbox" class="mock-enabled" checked>
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="mock-url-display"></span>
+        <span class="mock-method-badge"></span>
+        <span class="mock-status-badge badge">On</span>
+        <button class="btn btn-icon btn-expand" title="Expand">▼</button>
+        <button class="btn btn-icon btn-delete" title="Delete">×</button>
+      </div>
+
+      <!-- Expanded Body (hidden by default) -->
+      <div class="mock-card-body">
+        <div class="form-group">
+          <label class="form-label">URL Pattern</label>
+          <input type="text" class="form-input mock-url-pattern" placeholder="**/api/v1/users" autocomplete="off">
+          <span class="form-hint">Glob: ** — any path, * — any characters</span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group form-group-half">
+            <label class="form-label">Method</label>
+            <select class="form-select mock-method">
+              <option value="ALL">ALL</option>
+              <option value="GET">GET</option>
+              <option value="POST">POST</option>
+              <option value="PUT">PUT</option>
+              <option value="DELETE">DELETE</option>
+              <option value="PATCH">PATCH</option>
+            </select>
+          </div>
+
+          <div class="form-group form-group-half">
+            <label class="form-label">Status Code</label>
+            <input type="number" class="form-input mock-status-code" placeholder="200" min="100" max="599">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Response Body (JSON)</label>
+          <textarea class="form-textarea mock-response-body" rows="4" placeholder='{"success": true, "data": []}'></textarea>
+        </div>
+      </div>
+
+      <div class="mock-card-footer">
+        <span class="hit-counter">
+          <span class="hit-icon">🎯</span>
+          <span class="hit-count">0</span>
+          <span class="hit-label">hits</span>
+        </span>
+      </div>
+    </div>
+  </template>
+
+  <script src="popup.js"></script>
+</body>
+</html>
