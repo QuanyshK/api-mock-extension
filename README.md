@@ -1,135 +1,80 @@
-# qk-api-mock
+# qk-api-mock v1.0.1
 
-API mocking расширение для Chrome с поддержкой проектов, динамическими обновлениями и счётчиками срабатываний.
+Chrome extension for API mocking with per-tab activation, projects, dynamic rule updates and hit counters.
 
-## Возможности
+## What's New in v1.0.1
 
-- 🎭 **Мокирование API** — перехват fetch и XMLHttpRequest запросов
-- 📁 **Проекты** — организация моков по проектам с независимым включением/выключением
-- 🔄 **Динамические обновления** — изменения применяются без перезагрузки страницы
-- 🎯 **Счётчики срабатываний** — отслеживание количества вызовов каждого мока
-- 🌐 **Glob-паттерны** — гибкое сопоставление URL (`**` — любой путь, `*` — любые символы)
-- 💾 **Автосохранение** — все изменения сохраняются автоматически
-- 🔧 **Поддержка методов** — ALL, GET, POST, PUT, DELETE, PATCH
+- **Per-Tab Activation** — mocking is now off by default for all tabs. Press the Play button in the popup to enable mocking only for the current tab. Press Pause to disable it instantly.
+- **No More Domain Blocklists** — removed whitelists/blacklists. The extension runs on all URLs and delegates control entirely to the tab-level toggle.
+- **Tab Badge** — when mocking is active on a tab, the extension icon shows an **ON** badge so you always know where interception is running.
+- **Zero Side-Effects When Off** — when mocking is disabled, `fetch` and `XMLHttpRequest` work exactly like the browser's native implementations with no overhead.
 
-## Установка
+## Features
 
-### Ручная установка (Developer Mode)
+- Toggle mocking per tab via Play/Pause button
+- Organize mocks into projects
+- Glob-style URL patterns (`**` for any path, `*` for any characters)
+- Match by HTTP method or `ALL`
+- Mutate request body / query params before sending to the server
+- Return custom JSON responses with custom status codes
+- Hit counters for every rule
+- Rules update instantly without page reload
 
-1. Скачайте или клонируйте репозиторий
-2. Откройте Chrome и перейдите в `chrome://extensions/`
-3. Включите **Developer mode** (переключатель в правом верхнем углу)
-4. Нажмите **Load unpacked** и выберите папку с расширением
-5. Расширение появится в панели инструментов
+## Installation
 
-## Использование
+1. Open `chrome://extensions/`
+2. Enable **Developer mode**
+3. Click **Load unpacked**
+4. Select the project folder
 
-### Создание проекта
+## How to Use
 
-1. Откройте расширение, нажав на иконку в панели инструментов
-2. Нажмите кнопку **+** в боковой панели Projects
-3. Введите название проекта
+1. Open the extension popup on any page.
+2. Click the **▶ Play** button in the header to enable mocking for the **current tab only**.
+3. Create a project (or use the default one).
+4. Click **+ Add Mock** and fill in:
+   - **URL Pattern** — e.g. `**/api/users` or `*/graphql`
+   - **Method** — `GET`, `POST`, etc. or `ALL`
+   - **Status Code** — e.g. `200`
+   - **Response Body** — JSON you want to return
+   - *(Optional)* **Request Body** — override outgoing data
+5. Make requests on the page — matching ones will be intercepted.
+6. Click **⏸ Pause** at any time to instantly stop mocking on this tab.
 
-### Добавление мока
-
-1. Выберите проект в боковой панели
-2. Нажмите **+ Add Mock**
-3. Настройте параметры:
-   - **URL Pattern** — шаблон URL (например, `**/api/users` или `*/api/*`)
-   - **Method** — HTTP метод (ALL, GET, POST, PUT, DELETE, PATCH)
-   - **Status Code** — код ответа (200, 404, 500 и т.д.)
-   - **Response Body** — тело ответа в формате JSON
-
-### Glob-паттерны
-
-- `**` — соответствует любому количеству сегментов пути
-- `*` — соответствует любым символам в одном сегменте
-- `?` — соответствует одному любому символу
-
-Примеры:
-- `**/api/users` — соответствует `/api/users`, `/v1/api/users`, `/app/api/users`
-- `*/api/*` — соответствует `/v1/api/users`, `/v2/api/items`
-- `**/*.json` — соответствует любому URL, заканчивающемуся на `.json`
-
-### Управление проектами
-
-- **Переключение** — клик по названию проекта в боковой панели
-- **Включение/выключение** — тумблер рядом с названием проекта
-- **Переименование** — кнопка ✎ рядом с проектом
-- **Удаление** — кнопка × рядом с проектом
-
-### Счётчики срабатываний
-
-- Каждый мок отображает количество срабатываний (🎯 hits)
-- Счётчик обновляется в реальном времени
-- Иконка расширения показывает badge с количеством срабатываний на текущей вкладке
-- Нажмите **↺ Reset** для сброса всех счётчиков
-
-## Структура проекта
+## File Structure
 
 ```
-├── manifest.json      # Конфигурация расширения (Manifest V3)
-├── popup.html         # HTML интерфейса popup
-├── popup.css          # Стили интерфейса
-├── popup.js           # Логика управления проектами и моками
-├── background.js      # Service worker для badge уведомлений
-├── content.js         # Content script (ISOLATED world)
-├── injected.js        # Скрипт в MAIN world для перехвата запросов
-└── icons/             # Иконки расширения
-    ├── icon16.png
-    ├── icon32.png
-    ├── icon48.png
-    └── icon128.png
+├── manifest.json      # Extension manifest (MV3)
+├── background.js      # Service worker: badge management, tab cleanup
+├── content.js         # Content script: bridge between page and extension
+├── injected.js        # Injected into page MAIN world: fetch/XHR interception
+├── popup.html         # Popup UI markup
+├── popup.js           # Popup logic, tab state management
+├── popup.css          # Popup styles
+├── icons/             # Extension icons
+└── README.md          # This file
 ```
 
-## Архитектура
+## Architecture
 
-```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│   Popup (UI)    │────▶│  chrome.storage │◀────│  Content Script │
-│                 │     │                 │     │   (ISOLATED)    │
-└─────────────────┘     └─────────────────┘     └────────┬────────┘
-                                                         │
-                              ┌──────────────────────────┘
-                              │ postMessage
-                              ▼
-                    ┌─────────────────┐
-                    │  Injected Script│
-                    │   (MAIN world)  │
-                    └────────┬────────┘
-                             │
-                    ┌────────▼────────┐
-                    │  Перехват fetch │
-                    │      и XHR      │
-                    └─────────────────┘
-```
+- **injected.js** lives in the page's `MAIN` world and replaces `window.fetch` and `window.XMLHttpRequest`. When mocking is off, it immediately delegates to the original native APIs without any checks or delays.
+- **content.js** acts as a bridge: it receives `UPDATE_ACTIVE_RULES` messages from the popup (with `isEnabled` flag) and passes rules into the page via `postMessage`.
+- **popup.js** manages projects/rules storage and the per-tab toggle. Tab activation state is stored in `chrome.storage.session` under `tabEnabledStatus`.
+- **background.js** listens for `SET_TAB_ENABLED` to show the **ON** badge, and cleans up session storage when tabs are closed.
 
-### Компоненты
+## Changelog
 
-- **popup.js** — управление проектами и моками, сохранение в storage
-- **background.js** — обновление badge на иконке расширения
-- **content.js** — посредник между popup и injected script
-- **injected.js** — перехват fetch и XMLHttpRequest в контексте страницы
+### v1.0.1
+- Switched from global domain allow/block lists to per-tab activation
+- Added Play/Pause master toggle in popup header
+- Added `ON` badge for active tabs
+- Removed `BLOCKED_DOMAINS`, whitelists and `exclude_matches` from manifest
+- Native fetch/XHR are completely untouched when mocking is disabled
 
-## Разработка
-
-### Локальная разработка
-
-1. Внесите изменения в код
-2. Перейдите в `chrome://extensions/`
-3. Нажмите **Reload** на карточке расширения
-4. Проверьте изменения
-
-### Отладка
-
-- **Popup** — клик правой кнопкой на иконку → Inspect popup
-- **Background** — `chrome://extensions/` → Service worker → Inspect
-- **Content/Injected** — DevTools страницы → Console
-
-## Требования
-
-- Chrome 88+ (Manifest V3)
-
-## Лицензия
-
-MIT
+### v1.0.0
+- Initial release
+- Projects with enable/disable toggles
+- Mock rules with URL glob matching, method filtering, status code and response body
+- Request body mutation support
+- Real-time rule updates
+- Hit counters

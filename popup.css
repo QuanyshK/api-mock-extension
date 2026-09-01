@@ -1,4 +1,4 @@
-/* ======== CSS Variables ======== */
+
 :root {
   --bg-primary: #1a1a2e;
   --bg-secondary: #16213e;
@@ -40,7 +40,7 @@
   --sidebar-width: 180px;
 }
 
-/* ======== Reset & Base ======== */
+
 * {
   margin: 0;
   padding: 0;
@@ -60,7 +60,7 @@ body {
   overflow: hidden;
 }
 
-/* ======== Layout ======== */
+
 .container {
   display: flex;
   height: 100%;
@@ -68,7 +68,7 @@ body {
   position: relative;
 }
 
-/* ======== Sidebar ======== */
+
 .sidebar {
   width: var(--sidebar-width);
   min-width: var(--sidebar-width);
@@ -185,7 +185,7 @@ body {
   color: var(--accent-primary);
 }
 
-/* ======== Main Content ======== */
+
 .main-content {
   flex: 1;
   display: flex;
@@ -246,7 +246,7 @@ body {
   flex-shrink: 0;
 }
 
-/* ======== Typography ======== */
+
 .title {
   font-size: 14px;
   font-weight: 600;
@@ -268,7 +268,7 @@ body {
   white-space: nowrap;
 }
 
-/* ======== Buttons ======== */
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -345,6 +345,18 @@ body {
   color: var(--accent-primary);
 }
 
+.btn-toggle {
+  font-size: 14px;
+  width: 28px;
+  height: 28px;
+  color: var(--text-muted);
+}
+
+.btn-toggle.active {
+  color: #4caf50;
+  background: rgba(76, 175, 80, 0.15);
+}
+
 .btn-delete:hover {
   color: var(--accent-primary);
 }
@@ -367,7 +379,7 @@ body {
   flex-shrink: 0;
 }
 
-/* ======== Badges ======== */
+
 .badge {
   display: inline-flex;
   align-items: center;
@@ -427,7 +439,7 @@ body {
   color: #9c27b0;
 }
 
-/* ======== Empty State ======== */
+
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -456,14 +468,14 @@ body {
   color: var(--text-muted);
 }
 
-/* ======== Mock List ======== */
+
 .mock-list {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
 }
 
-/* ======== Mock Card ======== */
+
 .mock-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -525,7 +537,7 @@ body {
   border-top: 1px solid var(--border-color);
 }
 
-/* ======== Toggle Switch ======== */
+
 .toggle {
   position: relative;
   display: inline-flex;
@@ -570,7 +582,7 @@ body {
   transform: translateX(14px);
 }
 
-/* ======== Form Elements ======== */
+
 .form-group {
   margin-bottom: var(--spacing-md);
 }
@@ -649,7 +661,7 @@ body {
   margin-top: var(--spacing-xs);
 }
 
-/* ======== Hit Counter ======== */
+
 .hit-counter {
   display: inline-flex;
   align-items: center;
@@ -676,12 +688,12 @@ body {
   font-size: 10px;
 }
 
-/* ======== Footer ======== */
+
 .footer-text {
   color: var(--text-muted);
 }
 
-/* ======== Scrollbar ======== */
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -700,7 +712,7 @@ body {
   background: var(--accent-primary);
 }
 
-/* ======== Animations ======== */
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -727,7 +739,7 @@ body {
   animation: fadeIn var(--transition-normal);
 }
 
-/* ======== Overlay for click outside ======== */
+
 .sidebar-overlay {
   position: absolute;
   top: 0;

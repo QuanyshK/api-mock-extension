@@ -8,7 +8,6 @@
 </head>
 <body>
   <div class="container">
-    <!-- Projects Sidebar -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <h2 class="sidebar-title">Projects</h2>
@@ -18,11 +17,9 @@
         </div>
       </div>
       <div class="project-list" id="projectList">
-        <!-- Projects will be inserted here -->
       </div>
     </aside>
 
-    <!-- Main Content -->
     <div class="main-content" id="mainContent">
       <header class="header">
         <div class="header-left">
@@ -33,6 +30,9 @@
           </h1>
         </div>
         <div class="header-actions">
+          <button id="masterToggleBtn" class="btn btn-icon btn-toggle" title="Toggle Mocking">
+            <span id="masterToggleIcon">▶</span>
+          </button>
           <button id="resetCountersBtn" class="btn btn-secondary btn-small" title="Reset Counters">
             ↺ Reset
           </button>
@@ -50,18 +50,16 @@
         </div>
 
         <div id="mockList" class="mock-list">
-          <!-- Mock cards will be inserted here -->
         </div>
       </main>
 
       <footer class="footer">
-        <span class="footer-text">qk-api-mock v0.0.1</span>
+        <span class="footer-text">qk-api-mock v1.0.1</span>
         <span id="activeRulesCount" class="badge badge-info">0 active</span>
       </footer>
     </div>
   </div>
 
-  <!-- Template for project item -->
   <template id="projectItemTemplate">
     <div class="project-item" data-project-id="">
       <label class="toggle toggle-small">
@@ -76,10 +74,8 @@
     </div>
   </template>
 
-  <!-- Template for mock card (compact view) -->
   <template id="mockCardTemplate">
     <div class="mock-card" data-rule-id="">
-      <!-- Compact Header (always visible) -->
       <div class="mock-card-header">
         <label class="toggle">
           <input type="checkbox" class="mock-enabled" checked>
@@ -92,7 +88,6 @@
         <button class="btn btn-icon btn-delete" title="Delete">×</button>
       </div>
 
-      <!-- Expanded Body (hidden by default) -->
       <div class="mock-card-body">
         <div class="form-group">
           <label class="form-label">URL Pattern</label>
@@ -120,8 +115,15 @@
         </div>
 
         <div class="form-group">
+          <label class="form-label mock-request-body-label">Request Body (Mutation)</label>
+          <textarea class="form-textarea mock-request-body" rows="3" placeholder='{"key": "value"} or param1=value1&param2=value2'></textarea>
+          <span class="form-hint mock-request-body-hint">Optional: Override request data sent to server</span>
+        </div>
+
+        <div class="form-group">
           <label class="form-label">Response Body (JSON)</label>
           <textarea class="form-textarea mock-response-body" rows="4" placeholder='{"success": true, "data": []}'></textarea>
+          <span class="form-hint">Leave empty to let request go to real server (for body mutation only)</span>
         </div>
       </div>
 

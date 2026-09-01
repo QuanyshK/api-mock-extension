@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "qk-api-mock",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "API mocking extension with projects, dynamic updates and hit counters",
   "permissions": [
     "storage",
