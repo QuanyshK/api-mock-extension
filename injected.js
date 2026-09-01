@@ -199,6 +199,44 @@
 
   window.fetch.__qk_mocked = true;
 
+  function ensureXHRState(self) {
+    if (typeof self._method === 'undefined') self._method = 'GET';
+    if (typeof self._url === 'undefined') self._url = '';
+    if (typeof self._requestHeaders === 'undefined') self._requestHeaders = {};
+    if (typeof self._readyState === 'undefined') self._readyState = XMLHttpRequest.UNSENT;
+    if (typeof self._status === 'undefined') self._status = 0;
+    if (typeof self._statusText === 'undefined') self._statusText = '';
+    if (typeof self._responseText === 'undefined') self._responseText = '';
+    if (typeof self._responseHeaders === 'undefined') self._responseHeaders = {};
+    if (typeof self._mockRule === 'undefined') self._mockRule = null;
+    if (typeof self._mutatedUrl === 'undefined') self._mutatedUrl = null;
+    if (typeof self._nativeXHR === 'undefined') self._nativeXHR = null;
+    if (typeof self._responseType === 'undefined') self._responseType = '';
+    if (typeof self._withCredentials === 'undefined') self._withCredentials = false;
+    if (typeof self._timeout === 'undefined') self._timeout = 0;
+    if (typeof self._overrideMimeType === 'undefined') self._overrideMimeType = null;
+    if (typeof self._listeners === 'undefined') self._listeners = {};
+    if (typeof self.onreadystatechange === 'undefined') self.onreadystatechange = null;
+    if (typeof self.onload === 'undefined') self.onload = null;
+    if (typeof self.onloadstart === 'undefined') self.onloadstart = null;
+    if (typeof self.onprogress === 'undefined') self.onprogress = null;
+    if (typeof self.onerror === 'undefined') self.onerror = null;
+    if (typeof self.ontimeout === 'undefined') self.ontimeout = null;
+    if (typeof self.onloadend === 'undefined') self.onloadend = null;
+
+    if (typeof self._dispatchEvent !== 'function') {
+      self._dispatchEvent = function (type) {
+        if (self._listeners[type]) {
+          self._listeners[type].forEach(function (listener) {
+            try {
+              listener.call(self, { type: type, target: self });
+            } catch (e) {}
+          });
+        }
+      };
+    }
+  }
+
   function MockXHR() {
     if (!isEnabled || !mockRules.length) {
       return new OriginalXMLHttpRequest();
@@ -255,6 +293,7 @@
 
     open: function (method, url, async, user, password) {
       try {
+        ensureXHRState(this);
         this._method = (method || 'GET').toUpperCase();
         this._url = url || '';
         this._readyState = XMLHttpRequest.OPENED;
@@ -274,15 +313,18 @@
     },
 
     setRequestHeader: function (header, value) {
+      ensureXHRState(this);
       this._requestHeaders[header] = value;
     },
 
     overrideMimeType: function (mimeType) {
+      ensureXHRState(this);
       this._overrideMimeType = mimeType;
     },
 
     send: function (body) {
       const self = this;
+      ensureXHRState(this);
 
       try {
         if (this._mockRule) {
@@ -438,6 +480,7 @@
     },
 
     abort: function () {
+      ensureXHRState(this);
       if (this._nativeXHR) {
         this._nativeXHR.abort();
       }
@@ -445,6 +488,7 @@
     },
 
     getAllResponseHeaders: function () {
+      ensureXHRState(this);
       if (this._nativeXHR) {
         return this._nativeXHR.getAllResponseHeaders();
       }
@@ -455,6 +499,7 @@
     },
 
     getResponseHeader: function (header) {
+      ensureXHRState(this);
       if (this._nativeXHR) {
         return this._nativeXHR.getResponseHeader(header);
       }
@@ -463,6 +508,7 @@
     },
 
     addEventListener: function (type, listener) {
+      ensureXHRState(this);
       if (!this._listeners[type]) {
         this._listeners[type] = [];
       }
@@ -470,6 +516,7 @@
     },
 
     removeEventListener: function (type, listener) {
+      ensureXHRState(this);
       if (!this._listeners[type]) return;
       const index = this._listeners[type].indexOf(listener);
       if (index !== -1) {
@@ -478,6 +525,7 @@
     },
 
     _dispatchEvent: function (type) {
+      ensureXHRState(this);
       if (this._listeners[type]) {
         this._listeners[type].forEach(function(listener) {
           try {
@@ -513,6 +561,4 @@
   try {
     window.postMessage({ type: 'MOCK_RULES_REQUEST' }, '*');
   } catch (e) {}
-
-  console.log('[qk-api-mock] Injected script loaded');
 })();

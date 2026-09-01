@@ -51,6 +51,19 @@
     }
   }
 
+  function restoreBadgeForTab(tabId) {
+    chrome.storage.session.get(['tabEnabledStatus'], function (result) {
+      if (chrome.runtime.lastError) {
+        return;
+      }
+
+      const status = result.tabEnabledStatus || {};
+      const isEnabled = status[tabId] === true;
+
+      setTabEnabled(tabId, isEnabled);
+    });
+  }
+
   chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if (message.type === 'MOCK_HIT' && sender.tab) {
       incrementTabHit(sender.tab.id);
@@ -68,6 +81,9 @@
     if (changeInfo.status === 'loading') {
       clearBadgeForTab(tabId);
       activeTabs.delete(tabId);
+    }
+    if (changeInfo.status === 'complete') {
+      restoreBadgeForTab(tabId);
     }
   });
 
@@ -97,6 +113,4 @@
       chrome.storage.session.setAccessLevel({ accessLevel: 'TRUSTED_AND_UNTRUSTED_CONTEXTS' });
     } catch (e) {}
   });
-
-  console.log('[qk-api-mock] Background service worker initialized');
 })();

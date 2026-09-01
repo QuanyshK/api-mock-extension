@@ -79,6 +79,7 @@
         }
 
         const tabId = response.tabId;
+
         chrome.storage.session.get(['tabEnabledStatus'], function (result) {
           if (chrome.runtime.lastError) {
             loadAndSendRules();
@@ -86,6 +87,7 @@
           }
 
           const status = result.tabEnabledStatus || {};
+
           if (status[tabId] === true) {
             isEnabled = true;
             loadAndSendRules();

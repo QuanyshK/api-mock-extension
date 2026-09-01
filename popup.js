@@ -93,9 +93,7 @@
   }
 
   function saveRules() {
-    chrome.storage.local.set({ mockRules: mockRules }, function () {
-      console.log('[qk-api-mock] Rules saved');
-    });
+    chrome.storage.local.set({ mockRules: mockRules });
   }
 
   function saveHitCounters() {
@@ -635,8 +633,6 @@
         loadTabStatus();
       }
     });
-
-    console.log('[qk-api-mock] Popup initialized');
   }
 
   if (document.readyState === 'loading') {
